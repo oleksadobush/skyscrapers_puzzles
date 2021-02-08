@@ -6,10 +6,16 @@ def read_input(path: str):
     >>> read_input("check.txt")
     ['***21**', '452453*', '423145*', '*543215', '*35214*', '*41532*', '*2*1***']
     """
-    pass
+    new_data = []
+    with open(path) as data:
+        data = data.readlines()
+        for each in data:
+            each = each.rstrip()
+            new_data.append(each)
+    return new_data
 
 
-def left_to_right_check(input_line: str, pivot: int):
+def left_to_right_check(input_line: str, pivot: int) -> bool:
     """
     Check row-wise visibility from left to right.
     Return True if number of building from the left-most hint is visible looking to the right,
@@ -23,7 +29,21 @@ def left_to_right_check(input_line: str, pivot: int):
     >>> left_to_right_check("452453*", 5)
     False
     """
-    pass
+    check = False
+    buildings = input_line[1:-1]
+    count = 0
+    current_floor = 0
+    for floor in buildings:
+        try:
+            floor = int(floor)
+        except:
+            continue
+        if current_floor == 0 or floor > current_floor:
+            current_floor = floor
+            count += 1
+    if pivot == count:
+        check = True
+    return check
 
 
 def check_not_finished_board(board: list):
@@ -39,7 +59,13 @@ def check_not_finished_board(board: list):
     >>> check_not_finished_board(['***21**', '412453*', '423145*', '*5?3215', '*35214*', '*41532*', '*2*1***'])
     False
     """
-    pas
+    check = True
+    for buildings in board:
+        if '?' in buildings:
+            check = False
+            break
+
+    return check
 
 
 def check_uniqueness_in_rows(board: list):
@@ -55,10 +81,24 @@ def check_uniqueness_in_rows(board: list):
     >>> check_uniqueness_in_rows(['***21**', '412453*', '423145*', '*553215', '*35214*', '*41532*', '*2*1***'])
     False
     """
-    pass
+    check = True
+    for buildings in board:
+        houses = []
+        raw_buildings = buildings[1:-1]
+        for each in raw_buildings:
+            try:
+                each = int(each)
+            except:
+                continue
+            houses.append(each)
+        if len(houses) != len(set(houses)):
+            check = False
+            break
+
+    return check
 
 
-def check_horizontal_visibility(board: list):
+def check_horizontal_visibility(board: list) -> bool:
     """
     Check row-wise visibility (left-right and vice versa)
 
@@ -73,7 +113,22 @@ def check_horizontal_visibility(board: list):
     >>> check_horizontal_visibility(['***21**', '452413*', '423145*', '*543215', '*35214*', '*41532*', '*2*1***'])
     False
     """
-    pass
+    check = False
+    if check_uniqueness_in_rows(board) and check_not_finished_board(board):
+        for buildings in board:
+            hint_left = buildings[0]
+            hint_right = buildings[-1]
+            if hint_left != '*':
+                if not left_to_right_check(buildings, hint_left):
+                    break
+            if hint_right != '*':
+                if left_to_right_check(str(reversed(buildings)), hint_right):
+                    check = True
+                else:
+                    break
+            else:
+                check = True
+    return check
 
 
 def check_columns(board: list):
