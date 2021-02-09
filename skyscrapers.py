@@ -5,9 +5,6 @@ def read_input(path: str):
     """
     Read game board file from path.
     Return list of str.
-
-    >>> read_input("check.txt")
-    ['***21**', '452453*', '423145*', '*543215', '*35214*', '*41532*', '*2*1***']
     """
     new_data = []
     with open(path) as data:
@@ -132,6 +129,7 @@ def check_horizontal_visibility(board: list) -> bool:
                 if not left_to_right_check(reversed_buildings, hint_right):
                     return False
         return True
+    return False
 
 
 def check_columns(board: list):
@@ -172,9 +170,6 @@ def check_skyscrapers(input_path: str):
     Main function to check the status of skyscraper game board.
     Return True if the board status is compliant with the rules,
     False otherwise.
-
-    >>> check_skyscrapers("check.txt")
-    True
     """
     check = False
     board = read_input(input_path)
@@ -182,3 +177,7 @@ def check_skyscrapers(input_path: str):
         check = True
 
     return check
+
+
+if __name__ == "__main__":
+    print(check_columns(['***21**', '412453*', '423145*', '*542315', '*35214*', '*41532*', '*2*1***']))
